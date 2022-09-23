@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+
+        <LinearLayout
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_width="385dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:background="@drawable/card_view"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="13dp"
+            tools:layout_editor_absoluteY="26dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="40dp"
+                android:paddingTop="50dp"
+                android:text="Total Balance"
+                android:textColor="#fff"
+                android:textSize="22dp" />
+
+            <TextView
+                android:id="@+id/txtMoney"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-black"
+                android:paddingLeft="40dp"
+                android:paddingTop="10dp"
+                android:text="$3,729.00"
+                android:textColor="#fff"
+                android:textSize="35dp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnAddMoney"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="add money"
+                android:layout_marginEnd="15dp"
+                android:layout_gravity="end"
+                />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnGrapes"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:padding="45dp"
+            android:text="Grapes"
+            app:layout_constraintBottom_toTopOf="@+id/btnCarrots"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <Button
+            android:id="@+id/btnCarrots"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:padding="45dp"
+            android:text="Carrots"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnGrapes" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
