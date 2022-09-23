@@ -9,19 +9,19 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
 
         <LinearLayout
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             android:layout_width="385dp"
             android:layout_height="200dp"
             android:layout_gravity="center"
             android:background="@drawable/card_view"
             android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="13dp"
             tools:layout_editor_absoluteY="26dp">
 
@@ -41,7 +41,7 @@
                 android:fontFamily="sans-serif-black"
                 android:paddingLeft="40dp"
                 android:paddingTop="10dp"
-                android:text="$3,729.00"
+                android:text="$3,000"
                 android:textColor="#fff"
                 android:textSize="35dp"
                 android:textStyle="bold" />
@@ -50,36 +50,89 @@
                 android:id="@+id/btnAddMoney"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="add money"
-                android:layout_marginEnd="15dp"
                 android:layout_gravity="end"
-                />
+                android:layout_marginEnd="15dp"
+                android:text="add money" />
 
         </LinearLayout>
 
         <Button
             android:id="@+id/btnGrapes"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:padding="45dp"
+            android:layout_width="187dp"
+            android:layout_height="112dp"
+            android:layout_marginStart="204dp"
+            android:layout_marginTop="292dp"
+
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="324dp"
+            android:padding="30dp"
             android:text="Grapes"
-            app:layout_constraintBottom_toTopOf="@+id/btnCarrots"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintVertical_bias="0.0" />
 
         <Button
             android:id="@+id/btnCarrots"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:padding="45dp"
+
+            android:layout_width="174dp"
+            android:layout_height="110dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="292dp"
+
+            android:layout_marginBottom="332dp"
+            android:padding="30dp"
             android:text="Carrots"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+
+        <Button
+            android:id="@+id/btnlamp"
+            android:layout_width="174dp"
+            android:layout_height="110dp"
+
+
+            android:layout_marginStart="20dp"
+            android:padding="30dp"
+            android:text="Lamp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.674" />
+
+        <Button
+            android:id="@+id/btnvan"
+            android:layout_width="174dp"
+            android:layout_height="110dp"
+
+
+            android:layout_marginStart="216dp"
+            android:padding="30dp"
+            android:text="Van"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.674" />
+
+        <SearchView
+            android:layout_width="349dp"
+            android:layout_height="39dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="224dp"
+            android:layout_marginEnd="38dp"
+            android:layout_marginBottom="468dp"
+            android:background="@color/teal_700"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnGrapes" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
