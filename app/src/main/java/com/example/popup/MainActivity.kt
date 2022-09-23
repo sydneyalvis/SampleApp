@@ -19,7 +19,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
     var walletMoney: Int? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+       // setContentView(R.layout.activity_main)
 
         walletMoney = 3000
 
