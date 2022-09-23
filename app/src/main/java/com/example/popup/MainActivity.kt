@@ -61,6 +61,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
 
             } else {
                 walletMoney = walletMoney?.minus(txtPrice.text.toString().toInt())
+                binding.txtMoney.text = walletMoney.toString()
                 if (btnNumber == 1) {
                     binding.btnGrapes.visibility = View.GONE
                 } else {
@@ -90,10 +91,12 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
 
             }else {
 
-                walletMoney = walletMoney?.plus(txtAddMoney.text.toString().toInt())
+                var new = txtAddMoney.text.toString()
+                walletMoney = walletMoney?.plus(new.toInt())
+                binding.txtMoney.text = walletMoney.toString()
 
                 dialog!!.dismiss()
-                Toast.makeText(this@MainActivity, "Money added to wallet successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@MainActivity, "$walletMoney", Toast.LENGTH_SHORT).show()
             }
 
         }
