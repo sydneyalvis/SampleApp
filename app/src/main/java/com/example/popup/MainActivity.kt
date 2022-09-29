@@ -31,10 +31,16 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
         binding.btnGrapes.setOnClickListener {
             ShowDialog(1)
         }
-
         binding.btnCarrots.setOnClickListener {
             ShowDialog(2)
         }
+        binding.btnvan.setOnClickListener {
+            ShowDialog(3)
+        }
+        binding.btnlamp.setOnClickListener {
+            ShowDialog(4)
+        }
+
 
         binding.btnAddMoney.setOnClickListener {
 
@@ -49,11 +55,17 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
         } else {
             dialog!!.setContentView(R.layout.alert_dialog2)
         }
+        if (btnNumber == 3){
+            dialog!!.setContentView(R.layout.alert_dialog3)
+        }else{
+            dialog!!.setContentView(R.layout.alert_dialog4)
+        }
 
         val txtPrice = dialog!!.findViewById<TextView>(R.id.txtPrice)
 
         val PurchaseButton = dialog!!.findViewById<Button>(R.id.PurchaseButton)
         val CancelButton = dialog!!.findViewById<Button>(R.id.CancelButton)
+
         PurchaseButton.setOnClickListener {
             if (walletMoney!! < txtPrice.text.toString().toInt()){
 
@@ -67,6 +79,12 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
                 } else {
                     binding.btnCarrots.visibility = View.GONE
                 }
+                if (btnNumber == 3) {
+                    binding.btnvan.visibility = View.GONE
+                }else {
+                    binding.btnlamp.visibility = View.GONE
+                }
+
                 dialog!!.dismiss()
                 Toast.makeText(this@MainActivity, "Successfully Purchased!", Toast.LENGTH_SHORT).show()
             }
