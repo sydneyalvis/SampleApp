@@ -8,142 +8,276 @@
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        tools:context=".MainActivity">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".MainActivity">
 
-        <LinearLayout
-            android:layout_width="385dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center"
-            android:background="@drawable/card_view"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="13dp"
-            tools:layout_editor_absoluteY="26dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="40dp"
-                android:paddingTop="50dp"
-                android:text="Total Balance"
-                android:textColor="#fff"
-                android:textSize="22dp" />
-
-            <TextView
-                android:id="@+id/txtMoney"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-black"
-                android:paddingLeft="40dp"
-                android:paddingTop="10dp"
-                android:text="$3,000"
-                android:textColor="#fff"
-                android:textSize="35dp"
-                android:textStyle="bold" />
 
             <LinearLayout
+                android:id="@+id/linearCard"
+                android:layout_width="385dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:background="@drawable/card_view"
+                android:orientation="vertical"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="40dp"
+                    android:paddingTop="50dp"
+                    android:text="Total Balance"
+                    android:textColor="#fff"
+                    android:textSize="22dp" />
+
+                <TextView
+                    android:id="@+id/txtMoney"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
+                    android:paddingLeft="40dp"
+                    android:paddingTop="10dp"
+                    android:text="$3,000"
+                    android:textColor="#fff"
+                    android:textSize="35dp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="40dp"
+                    android:paddingTop="10dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnAddMoney"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="15dp"
+                        android:text="add money" />
+
+                    <Button
+                        android:id="@+id/btnLogOut"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="15dp"
+                        android:text="Log Out" />
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+            <SearchView
+                android:id="@+id/searchView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="10dp"
+                android:background="@color/grayish"
+                android:queryHint="Search..."
+                app:layout_constraintEnd_toStartOf="@+id/relaFilter"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/linearCard"
+                />
+
+            <RelativeLayout
+                android:id="@+id/relaFilter"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="20dp"
+                android:background="@drawable/circle"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/linearCard"
+                app:layout_constraintStart_toEndOf="@id/searchView">
+
+                <ImageView
+                    android:id="@+id/filter"
+                    android:layout_width="30dp"
+                    android:layout_height="35dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/ic_filter_list"
+                    app:tint="@color/white" />
+
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:id="@+id/keywords"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="40dp"
-                android:paddingTop="10dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintTop_toBottomOf="@id/searchView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                >
 
-                <Button
-                    android:id="@+id/btnAddMoney"
+                <RelativeLayout
+                    android:id="@+id/keyGrapes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_rect"
+                    >
 
-                    android:layout_marginEnd="15dp"
-                    android:text="add money" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:text="Grapes"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+                </RelativeLayout>
 
-                <Button
-                    android:id="@+id/btnLogOut"
+                <RelativeLayout
+                    android:id="@+id/keyCarrot"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="15dp"
-                    android:text="Log Out" />
+                    android:background="@drawable/rounded_rect"
+                    android:layout_marginStart="5dp"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:text="Carrots"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/keyLamp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_rect"
+                    android:layout_marginStart="5dp"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lamp"
+                        android:padding="10dp"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/keyVan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_rect"
+                    android:layout_marginStart="5dp"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Van"
+                        android:padding="10dp"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        />
+                </RelativeLayout>
 
             </LinearLayout>
 
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/keywords"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnCarrots"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2"
+                tools:listitem="@layout/items"
+                tools:itemCount="4"
+                />
 
-        </LinearLayout>
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btnGrapes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="324dp"
+                android:padding="30dp"
+                android:text="Grapes"
+                app:layout_constraintTop_toBottomOf="@id/keywords"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnCarrots"
+                />
 
-        <Button
-            android:id="@+id/btnGrapes"
-            android:layout_width="187dp"
-            android:layout_height="112dp"
-            android:layout_marginStart="204dp"
-            android:layout_marginTop="292dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="324dp"
-            android:padding="30dp"
-            android:text="Grapes"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <Button
-            android:id="@+id/btnCarrots"
-            android:layout_width="174dp"
-            android:layout_height="110dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="292dp"
-            android:layout_marginBottom="332dp"
-            android:padding="30dp"
-            android:text="Carrots"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-
-
-        <Button
-            android:id="@+id/btnlamp"
-            android:layout_width="174dp"
-            android:layout_height="110dp"
-            android:layout_marginStart="20dp"
-            android:padding="30dp"
-            android:text="Lamp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.674" />
-
-        <Button
-            android:id="@+id/btnvan"
-            android:layout_width="174dp"
-            android:layout_height="110dp"
-            android:layout_marginStart="216dp"
-            android:padding="30dp"
-            android:text="Van"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.674" />
-
-        <SearchView
-            android:layout_width="349dp"
-            android:layout_height="39dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="224dp"
-            android:layout_marginEnd="38dp"
-            android:layout_marginBottom="468dp"
-            android:background="@color/teal_700"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btnCarrots"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:padding="30dp"
+                android:text="Carrots"
+                app:layout_constraintTop_toBottomOf="@id/keywords"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btnGrapes"
+                />
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btnlamp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:padding="30dp"
+                android:text="Lamp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btnGrapes"
+                app:layout_constraintEnd_toStartOf="@id/btnvan"
+                />
+
+            <Button
+                android:visibility="gone"
+                android:id="@+id/btnvan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:padding="30dp"
+                android:text="Van"
+                app:layout_constraintTop_toBottomOf="@id/btnCarrots"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btnlamp"
+                />
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
 </layout>

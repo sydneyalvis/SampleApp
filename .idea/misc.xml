@@ -11,12 +11,18 @@
         <entry key="..\:/Users/steph/AndroidStudioProjects/popup/app/src/main/res/layout/alert_dialog2.xml" value="0.25" />
         <entry key="..\:/Users/steph/AndroidStudioProjects/popup/app/src/main/res/layout/fragment_wallet.xml" value="0.33" />
         <entry key="..\:/Users/steph/AndroidStudioProjects/popup/app/src/main/res/layout/wallet.xml" value="0.17274569402228976" />
+        <entry key="app/src/main/res/drawable/circle.xml" value="0.1765" />
+        <entry key="app/src/main/res/drawable/rounded_rect.xml" value="0.14" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.24270833333333333" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.24270833333333333" />
         <entry key="app/src/main/res/layout/activity_reg.xml" value="0.2602986653645833" />
         <entry key="app/src/main/res/layout/add.xml" value="0.24270833333333333" />
         <entry key="app/src/main/res/layout/alert_dialog.xml" value="0.24270833333333333" />
         <entry key="app/src/main/res/layout/alert_dialog2.xml" value="0.24270833333333333" />
+        <entry key="app/src/main/res/layout/alert_dialog3.xml" value="0.24270833333333333" />
+        <entry key="app/src/main/res/layout/alert_dialog4.xml" value="0.24270833333333333" />
+        <entry key="app/src/main/res/layout/filter_alert_dialog.xml" value="0.24270833333333333" />
+        <entry key="app/src/main/res/layout/items.xml" value="0.24270833333333333" />
         <entry key="app/src/main/res/layout/login_activity.xml" value="0.25" />
         <entry key="app/src/main/res/layout/register_activity.xml" value="0.24270833333333333" />
       </map>

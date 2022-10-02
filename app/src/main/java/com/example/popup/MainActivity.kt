@@ -5,19 +5,28 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
+import android.widget.*
 import com.example.popup.R
-import android.widget.Toast
+import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.RecyclerView
+import com.example.popup.adapter.itemsAdapter
 import com.example.popup.databinding.ActivityMainBinding
+import com.example.popup.model.items
+import com.example.popup.utils.itemsClickListener
 import com.google.android.material.textfield.TextInputEditText
 import com.skydoves.bindables.BindingActivity
 import kotlin.properties.Delegates
 
-class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main) {
+class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main), itemsClickListener {
+
+    lateinit var itemsRV: RecyclerView
+    lateinit var itemsRVAdapter: itemsAdapter
+    lateinit var itemsList: ArrayList<items>
 
     var dialog: Dialog? = null
     var walletMoney: Int? = null
+    
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.login_activity)
@@ -29,29 +38,118 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
 
         dialog = Dialog(this)
 
-        binding.btnGrapes.setOnClickListener {
-            ShowDialog(1)
-        }
-        binding.btnCarrots.setOnClickListener {
-            ShowDialog(2)
-        }
-        binding.btnvan.setOnClickListener {
-            ShowDialog(3)
-        }
-        binding.btnlamp.setOnClickListener {
-            ShowDialog(4)
-        }
         binding.btnAddMoney.setOnClickListener {
 
             addMoney(3)
 
         }
 
+        // on below line we are initializing our list
+        itemsList = ArrayList()
+
+        // on below line we are initializing our adapter
+        itemsRVAdapter = itemsAdapter(itemsList, this)
+
+        // on below line we are setting adapter to our recycler view.
+        itemsRV.adapter = itemsRVAdapter
+
+        // on below line we are adding data to our list
+        itemsList.add(items("GRAPES", R.drawable.grapes, "Grapes contain powerful antioxidants known as polyphenols. These are thought to have anti-inflammatory and antioxidant properties. ",  "100", System.currentTimeMillis()))
+        itemsList.add(items("CARROT", R.drawable.carrot, "Carrots are rich in vitamins, minerals, and fiber. They are also a good source of antioxidants. Antioxidants are nutrients present in plant-based foods. " ,  "150", System.currentTimeMillis()))
+        itemsList.add(items("LAMP", R.drawable.lamp, "A van is a type of road vehicle used for transporting goods or people. Depending on the type of van, it can be bigger or smaller than a pickup truck and SUV, and bigger than a common car. There is some varying in the scope of the word across the different  ", "200", System.currentTimeMillis()))
+        itemsList.add(items("VAN", R.drawable.van, "An electric light, lamp, or colloquially called light bulb is an electrical device that produces light. It is the most common form of artificial lighting. Lamps usually have a base made of ceramic, metal, glass, or plastic, which secures the lamp in the socket of a light fixture. " ,  "1500", System.currentTimeMillis()))
+
+        itemsRVAdapter.notifyDataSetChanged()
+
+        keyWordFilter()
+
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            android.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(msg: String): Boolean {
+                // inside on query text change method we are
+                // calling a method to filter our recycler view.
+                filter(msg)
+                return false
+            }
+        })
+
         binding.btnLogOut.setOnClickListener {
 
             prefs.setLogOut()
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
+
+        }
+
+        binding.relaFilter.setOnClickListener {
+            sort()
+
+        }
+    }
+
+    private fun sort(){
+        dialog!!.setContentView(R.layout.sort_alert_dialog)
+
+        val sortButton = dialog!!.findViewById<Button>(R.id.sortButton)
+        val CancelButton = dialog!!.findViewById<Button>(R.id.CancelButton)
+
+        val sortName = dialog!!.findViewById<CheckBox>(R.id.sortName)
+        val sortPrice = dialog!!.findViewById<CheckBox>(R.id.sortPrice)
+        val sortLatest = dialog!!.findViewById<CheckBox>(R.id.sortLatest)
+
+        sortButton.setOnClickListener {
+            sortName.setOnCheckedChangeListener { compoundButton, b ->
+
+                itemsList.sortWith(
+                    compareBy(String.CASE_INSENSITIVE_ORDER, { it.name })
+                )
+
+            }
+
+            sortPrice.setOnCheckedChangeListener { compoundButton, b ->
+
+                itemsList.sortByDescending { it.price }
+
+            }
+
+            sortLatest.setOnCheckedChangeListener { compoundButton, b ->
+                itemsList.sortByDescending { it.createdAt }
+
+            }
+
+            dialog!!.dismiss()
+
+        }
+
+        CancelButton.setOnClickListener { dialog!!.dismiss() }
+        dialog!!.create()
+        dialog!!.show()
+
+    }
+
+    private fun filter(text: String) {
+
+        val filteredlist: ArrayList<items> = ArrayList()
+
+        for (item in itemsList) {
+
+            if (item.name.toLowerCase().contains(text.toLowerCase()) || item.description.toLowerCase().contains(text.toLowerCase())) {
+
+                filteredlist.add(item)
+
+            }
+        }
+        if (filteredlist.isEmpty()) {
+
+            Toast.makeText(this, "No items Found..", Toast.LENGTH_SHORT).show()
+
+        } else {
+
+            itemsRVAdapter.filterList(filteredlist)
 
         }
     }
@@ -130,4 +228,86 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
         dialog!!.show()
 
     }
+
+    override fun onItemClickLister(data: items) {
+        showDialogAlert(data)
+    }
+
+    private fun showDialogAlert(data: items) {
+
+        val filteredlist: ArrayList<items> = ArrayList()
+
+        dialog!!.setContentView(R.layout.alert_dialog)
+
+        val txtName = dialog!!.findViewById<TextView>(R.id.txtName)
+        val itemImage = dialog!!.findViewById<ImageView>(R.id.image)
+        val txtDescription = dialog!!.findViewById<TextView>(R.id.txtDescription)
+        val txtPrice = dialog!!.findViewById<TextView>(R.id.txtPrice)
+        
+        txtName.text = data.name
+        txtDescription.text = data.description 
+        txtPrice.text = data.price
+        itemImage.setImageResource(data.image)
+
+        val PurchaseButton = dialog!!.findViewById<Button>(R.id.PurchaseButton)
+        val CancelButton = dialog!!.findViewById<Button>(R.id.CancelButton)
+
+        PurchaseButton.setOnClickListener {
+            
+            if (walletMoney!! < txtPrice.text.toString().toInt()){
+
+                Toast.makeText(this@MainActivity, "Insufficient funds", Toast.LENGTH_SHORT).show()
+
+            } else {
+                walletMoney = walletMoney?.minus(txtPrice.text.toString().toInt())
+                binding.txtMoney.text = walletMoney.toString()
+
+                filteredlist.addAll(itemsList.filter { items -> items.name != data.name })
+                itemsRVAdapter.filterList(filteredlist)
+
+                dialog!!.dismiss()
+                Toast.makeText(this@MainActivity, "Successfully Purchased!", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+
+        CancelButton.setOnClickListener { dialog!!.dismiss() }
+        dialog!!.create()
+        dialog!!.show()
+    }
+
+    private fun keyWordFilter(){
+        val filteredlist: ArrayList<items> = ArrayList()
+
+        binding.keyGrapes.setOnClickListener {
+
+            filteredlist.addAll(itemsList.filter { items -> items.name == "GRAPES" })
+            itemsRVAdapter.filterList(filteredlist)
+
+        }
+
+        binding.keyCarrot.setOnClickListener {
+
+            filteredlist.addAll(itemsList.filter { items -> items.name == "CARROT" })
+            itemsRVAdapter.filterList(filteredlist)
+
+        }
+
+        binding.keyLamp.setOnClickListener {
+
+            filteredlist.addAll(itemsList.filter { items -> items.name == "LAMP" })
+            itemsRVAdapter.filterList(filteredlist)
+
+        }
+
+        binding.keyVan.setOnClickListener {
+
+            filteredlist.addAll(itemsList.filter { items -> items.name == "VAN" })
+            itemsRVAdapter.filterList(filteredlist)
+
+        }
+
+
+    }
+
 }
