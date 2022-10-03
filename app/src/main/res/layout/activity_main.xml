@@ -55,22 +55,32 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="40dp"
                     android:paddingTop="10dp"
+                    android:layout_weight="3"
                     android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnAddMoney"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="15dp"
                         android:text="add money" />
 
                     <Button
-                        android:id="@+id/btnLogOut"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/btnTransactions"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="15dp"
+                        android:text="Transactions" />
+
+                    <Button
+                        android:id="@+id/btnLogOut"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
                         android:text="Log Out" />
 
                 </LinearLayout>

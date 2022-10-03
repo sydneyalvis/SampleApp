@@ -9,5 +9,8 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="grayish">#9A9A9A</color>
+    <color name="grayweight">#EFEFEF</color>
+
+    <color name="red">#FF0000</color>
 
 </resources>

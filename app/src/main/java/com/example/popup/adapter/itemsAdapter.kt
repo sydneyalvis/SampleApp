@@ -14,6 +14,8 @@ class itemsAdapter(
     private var itemsList: ArrayList<items>,
     var listener: itemsClickListener
     ) : RecyclerView.Adapter<itemsAdapter.itemsViewHolder>() {
+
+
         override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
@@ -58,4 +60,6 @@ class itemsAdapter(
             //val courseIV: ImageView = itemView.findViewById(R.id.idIVCourse)
 
         }
+
+
     }

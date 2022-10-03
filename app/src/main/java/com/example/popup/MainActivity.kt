@@ -25,13 +25,17 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
 
     var dialog: Dialog? = null
     var walletMoney: Int? = null
-    
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.login_activity)
 
-        walletMoney = 3000
+        walletMoney = if (prefs.getWallet() == null ) {
+            0
+        } else {
+            prefs.getWallet()
+
+        }
 
         //Set an initial amount of money in the wallet
         binding.txtMoney.text = walletMoney.toString()
@@ -89,6 +93,13 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
             sort()
 
         }
+
+        binding.btnTransactions.setOnClickListener {
+
+            startActivity(Intent(this, TransactionsActivity::class.java))
+
+        }
+
     }
 
     private fun sort(){
@@ -216,6 +227,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
 
                 var new = txtAddMoney.text.toString()
                 walletMoney = walletMoney?.plus(new.toInt())
+                prefs.setWalletMoney(walletMoney!!.toInt())
                 binding.txtMoney.text = walletMoney.toString()
 
                 dialog!!.dismiss()
@@ -262,6 +274,12 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
                 walletMoney = walletMoney?.minus(txtPrice.text.toString().toInt())
                 binding.txtMoney.text = walletMoney.toString()
 
+                prefs.setWalletMoney(walletMoney!!.toInt())
+
+                val purchasedItems = prefs.getArrayList()
+                purchasedItems.add(data)
+                prefs.saveArrayList(purchasedItems)
+
                 filteredlist.addAll(itemsList.filter { items -> items.name != data.name })
                 itemsRVAdapter.filterList(filteredlist)
 
@@ -277,6 +295,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
     }
 
     private fun keyWordFilter(){
+
         val filteredlist: ArrayList<items> = ArrayList()
 
         binding.keyGrapes.setOnClickListener {
@@ -309,5 +328,6 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
 
 
     }
+
 
 }
