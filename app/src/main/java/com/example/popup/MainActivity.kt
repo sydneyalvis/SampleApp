@@ -19,7 +19,7 @@ import kotlin.properties.Delegates
 
 class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main), itemsClickListener {
 
-    lateinit var itemsRV: RecyclerView
+   // lateinit var itemsRV: RecyclerView
     lateinit var itemsRVAdapter: itemsAdapter
     lateinit var itemsList: ArrayList<items>
 
@@ -51,7 +51,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
         itemsRVAdapter = itemsAdapter(itemsList, this)
 
         // on below line we are setting adapter to our recycler view.
-        itemsRV.adapter = itemsRVAdapter
+        binding.recyclerView.adapter = itemsRVAdapter
 
         // on below line we are adding data to our list
         itemsList.add(items("GRAPES", R.drawable.grapes, "Grapes contain powerful antioxidants known as polyphenols. These are thought to have anti-inflammatory and antioxidant properties. ",  "100", System.currentTimeMillis()))
