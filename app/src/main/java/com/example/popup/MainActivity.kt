@@ -276,9 +276,20 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
 
                 prefs.setWalletMoney(walletMoney!!.toInt())
 
-                val purchasedItems = prefs.getArrayList()
-                purchasedItems.add(data)
-                prefs.saveArrayList(purchasedItems)
+                try {
+
+                    val purchasedItems = prefs.getArrayList()
+                    purchasedItems.add(data)
+                    prefs.saveArrayList(purchasedItems)
+
+                } catch (e: NullPointerException){
+
+                    val purchasedItems: ArrayList<items> = ArrayList()
+                    purchasedItems.add(data)
+                    prefs.saveArrayList(purchasedItems)
+
+                }
+
 
                 filteredlist.addAll(itemsList.filter { items -> items.name != data.name })
                 itemsRVAdapter.filterList(filteredlist)

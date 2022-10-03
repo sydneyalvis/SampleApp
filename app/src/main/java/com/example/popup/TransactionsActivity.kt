@@ -28,18 +28,23 @@ class TransactionsActivity : BindingActivity<ActivityTransactionsBinding>(R.layo
 
         //Set an initial amount of money in the wallet
         binding.txtMoney.text = walletMoney.toString()
-        // on below line we are initializing our list
-        itemsList = ArrayList()
-        itemsRVAdapter = transactionAdapter(itemsList)
 
-        itemsList.addAll(prefs.getArrayList())
+        try {
 
-        itemsRVAdapter.notifyDataSetChanged()
+            itemsList = ArrayList()
+            itemsRVAdapter = transactionAdapter(itemsList)
+
+            itemsList.addAll(prefs.getArrayList())
+
+            itemsRVAdapter.notifyDataSetChanged()
 
 
-        // on below line we are setting adapter to our recycler view.
-        binding.recyclerView.adapter = itemsRVAdapter
+            // on below line we are setting adapter to our recycler view.
+            binding.recyclerView.adapter = itemsRVAdapter
 
+        } catch (e: NullPointerException){
+
+        }
 
     }
 
