@@ -1,6 +1,7 @@
 package com.example.popup.fragments
 
 import android.graphics.Color
+import android.graphics.DashPathEffect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,16 +11,14 @@ import com.example.popup.R
 import com.example.popup.databinding.FragmentTrendsBinding
 import com.example.popup.model.items
 import com.example.popup.prefs
+import com.example.popup.utils.XAxisValueFormatter
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.components.AxisBase
-import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.*
 import com.github.mikephil.charting.components.Legend.LegendForm
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.components.XAxis.XAxisPosition
 import com.github.mikephil.charting.data.*
-import com.github.mikephil.charting.formatter.IAxisValueFormatter
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
@@ -206,29 +205,62 @@ class TrendsFrag : BindingFragment<FragmentTrendsBinding>(R.layout.fragment_tren
         // force pinch zoom along both axis
         lineChart.setPinchZoom(true)
 
-        var xAxis: XAxis
-        {   // // X-Axis Style // //
-            xAxis = lineChart.xAxis
+        // // X-Axis Style // //
+        var xAxis: XAxis = lineChart.xAxis
 
-            // vertical grid lines
-            xAxis.enableGridDashedLine(10f, 10f, 0f)
-            xAxis.labelRotationAngle = 45f
-        }
+        val position = XAxisPosition.BOTTOM
+        xAxis.position = position
+        xAxis.enableGridDashedLine(10f, 10f, 0f)
+        xAxis.labelRotationAngle = 45f
+        xAxis.setValueFormatter(XAxisValueFormatter(itemsList));
 
-        var yAxis: YAxis
-        {   // // Y-Axis Style // //
-            yAxis = lineChart.getAxisLeft()
+        lineChart.getDescription().setEnabled(true);
+        val description =  Description();
+        description.setText("Purchase Trends");
+        description.setTextSize(15f);
 
-            // disable dual axis (only use LEFT axis)
-            lineChart.getAxisRight().setEnabled(false)
+        // Y-Axis Style // //
+        var yAxis: YAxis = lineChart.getAxisLeft()
 
-            // horizontal grid lines
-            yAxis.enableGridDashedLine(10f, 10f, 0f)
+        // disable dual axis (only use LEFT axis)
+        lineChart.getAxisRight().setEnabled(false)
 
-            // axis range
-            yAxis.axisMaximum = 200f
-            yAxis.axisMinimum = -50f
-        }
+        // horizontal grid lines
+        yAxis.enableGridDashedLine(10f, 10f, 0f)
+
+        // axis range
+        yAxis.axisMaximum = 200f
+        yAxis.axisMinimum = -50f
+          // // Create Limit Lines // //
+        val llXAxis =  LimitLine(9f, "Index 10");
+            llXAxis.setLineWidth(4f);
+            llXAxis.enableDashedLine(10f, 10f, 0f);
+            llXAxis.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+            llXAxis.setTextSize(10f);
+            //llXAxis.setTypeface(tfRegular);
+
+            val ll1 =  LimitLine(150f, "Upper Limit");
+            ll1.setLineWidth(4f);
+            ll1.enableDashedLine(10f, 10f, 0f);
+            ll1.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_TOP);
+            ll1.setTextSize(10f);
+            //ll1.setTypeface(tfRegular);
+
+            val ll2 =  LimitLine(-30f, "Lower Limit");
+            ll2.setLineWidth(4f);
+            ll2.enableDashedLine(10f, 10f, 0f);
+            ll2.setLabelPosition(LimitLine.LimitLabelPosition.RIGHT_BOTTOM);
+            ll2.setTextSize(10f);
+            //ll2.setTypeface(tfRegular);
+
+            // draw limit lines behind data instead of on top
+            yAxis.setDrawLimitLinesBehindData(true);
+            xAxis.setDrawLimitLinesBehindData(true);
+
+            // add limit lines
+            yAxis.addLimitLine(ll1);
+            yAxis.addLimitLine(ll2);
+
 
         setLineChartData()
 
@@ -253,47 +285,38 @@ class TrendsFrag : BindingFragment<FragmentTrendsBinding>(R.layout.fragment_tren
             )
         }
 
-        var set1: LineDataSet = LineDataSet(values, "Trends")
-        set1.notifyDataSetChanged()
-        lineChart.data.notifyDataChanged()
-        lineChart.notifyDataSetChanged()
-        set1.setDrawIcons(false);
+        val set1: LineDataSet
+        if (lineChart.getData() != null &&
+            lineChart.getData().getDataSetCount() > 0
+        ) {
+            set1 = lineChart.getData().getDataSetByIndex(0) as LineDataSet
+            set1.values = values
+            lineChart.getData().notifyDataChanged()
+            lineChart.notifyDataSetChanged()
+        } else {
+            set1 = LineDataSet(values, "Total volume")
+            set1.setDrawCircles(true)
+            set1.enableDashedLine(10f, 0f, 0f)
+            set1.enableDashedHighlightLine(10f, 0f, 0f)
+            set1.color = resources.getColor(R.color.teal_700)
+            set1.setCircleColor(resources.getColor(R.color.purple_200))
+            set1.lineWidth = 2f //line size
+            set1.circleRadius = 5f
+            set1.setDrawCircleHole(true)
+            set1.valueTextSize = 10f
+            set1.setDrawFilled(true)
+            set1.formLineWidth = 5f
+            set1.formLineDashEffect = DashPathEffect(floatArrayOf(10f, 5f), 0f)
+            set1.formSize = 5f
 
-        // draw dashed line
-        set1.enableDashedLine(10f, 5f, 0f);
+            set1.fillColor = Color.WHITE
 
-        // black lines and points
-        set1.setColor(Color.BLACK);
-        set1.setCircleColor(Color.BLACK);
-
-        // line thickness and point size
-        set1.setLineWidth(1f);
-        set1.setCircleRadius(3f);
-
-        // draw points as solid circles
-        set1.setDrawCircleHole(false);
-        // text size of values
-        set1.setValueTextSize(9f);
-
-        val dataSets: ArrayList<ILineDataSet> = ArrayList()
-        dataSets.add(set1) // add the data sets
-
-        val data = LineData(dataSets)
-
-        val xAxis = lineChart.xAxis
-        xAxis.setValueFormatter(object : ValueFormatter() {
-            override fun getFormattedValue(value: Float, axis: AxisBase?): String {
-               return "Today"
-            }
-
-            val decimalDigits: Int
-                get() = 0
-        })
-
-        lineChart.setData(data)
-
-
-
+            set1.setDrawValues(true)
+            val dataSets: ArrayList<ILineDataSet> = ArrayList()
+            dataSets.add(set1)
+            val data = LineData(dataSets)
+            lineChart.setData(data)
+        }
 
     }
 
