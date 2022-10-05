@@ -2,6 +2,7 @@ package com.example.popup
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.popup.adapter.PagerAdapter
 import com.example.popup.adapter.itemsAdapter
 import com.example.popup.adapter.transactionAdapter
 import com.example.popup.databinding.ActivityMainBinding
@@ -11,8 +12,6 @@ import com.skydoves.bindables.BindingActivity
 
 class TransactionsActivity : BindingActivity<ActivityTransactionsBinding>(R.layout.activity_transactions) {
 
-    lateinit var itemsRVAdapter: transactionAdapter
-    lateinit var itemsList: ArrayList<items>
     var walletMoney: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,22 +28,9 @@ class TransactionsActivity : BindingActivity<ActivityTransactionsBinding>(R.layo
         //Set an initial amount of money in the wallet
         binding.txtMoney.text = walletMoney.toString()
 
-        try {
-
-            itemsList = ArrayList()
-            itemsRVAdapter = transactionAdapter(itemsList)
-
-            itemsList.addAll(prefs.getArrayList())
-
-            itemsRVAdapter.notifyDataSetChanged()
-
-
-            // on below line we are setting adapter to our recycler view.
-            binding.recyclerView.adapter = itemsRVAdapter
-
-        } catch (e: NullPointerException){
-
-        }
+        val fragmentAdapter = PagerAdapter(supportFragmentManager)
+        binding.viewPager.adapter = fragmentAdapter
+        binding.tabsMain.setupWithViewPager(binding.viewPager)
 
     }
 

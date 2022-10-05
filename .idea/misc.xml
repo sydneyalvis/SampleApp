@@ -23,6 +23,8 @@
         <entry key="app/src/main/res/layout/alert_dialog3.xml" value="0.24270833333333333" />
         <entry key="app/src/main/res/layout/alert_dialog4.xml" value="0.24270833333333333" />
         <entry key="app/src/main/res/layout/filter_alert_dialog.xml" value="0.24270833333333333" />
+        <entry key="app/src/main/res/layout/fragment_transactions.xml" value="0.24270833333333333" />
+        <entry key="app/src/main/res/layout/fragment_trends.xml" value="0.24270833333333333" />
         <entry key="app/src/main/res/layout/items.xml" value="0.24270833333333333" />
         <entry key="app/src/main/res/layout/login_activity.xml" value="0.25" />
         <entry key="app/src/main/res/layout/register_activity.xml" value="0.24270833333333333" />
