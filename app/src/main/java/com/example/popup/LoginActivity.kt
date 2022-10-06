@@ -6,9 +6,16 @@ import android.os.Bundle
 import android.widget.Toast
 import com.example.popup.databinding.ActivityLoginBinding
 import com.skydoves.bindables.BindingActivity
+import okhttp3.*
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_login) {
 
+
+    private val url = "http://127.0.0.1:5000"
+    private val POST = "POST"
+    private val GET = "GET"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,12 +68,68 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_lo
         }else {
 
             prefs.setLogin()
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+            sendServer(POST,"login")
 
         }
 
     }
+
+    private fun sendServer(type: String, method: String){
+
+        val fullURL = url + "/" + method
+
+        val client = OkHttpClient().newBuilder()
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS).build()
+
+        /* If it is a post request, then we have to pass the parameters inside the request body*/
+        //val request =  if (type.equals(POST)) {
+
+            val formBody: RequestBody = FormBody.Builder()
+                .add("username", binding.inputUsername.text.toString())
+               // .add("email", binding.inputEmail.text.toString())
+                .add("password", binding.inputPassword.text.toString())
+                .build()
+
+            val request = Request.Builder()
+                .url(fullURL)
+                .post(formBody)
+                .build()
+
+//        } else {
+//
+//            /*If it's our get request, it doen't require parameters, hence just sending with the url*/
+//            Request.Builder()
+//                .url(fullURL)
+//                .build()
+//
+//        }
+
+        /* this is how the callback get handled */
+        client.newCall(request)
+            .enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    e.printStackTrace()
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    // Read data on the worker thread
+                    val responseData = response.body!!.string()
+
+                    // Run view-related code back on the main thread.
+                    // Here we display the response message in our text view
+                    this@LoginActivity.runOnUiThread(Runnable {
+                        Toast.makeText(this@LoginActivity, "Lgin successfully $responseData", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                        finish()
+                    })
+                }
+            })
+
+
+    }
+
 
 
 }

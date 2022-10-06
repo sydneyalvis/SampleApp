@@ -15,6 +15,9 @@ import com.example.popup.model.items
 import com.example.popup.utils.itemsClickListener
 import com.google.android.material.textfield.TextInputEditText
 import com.skydoves.bindables.BindingActivity
+import okhttp3.*
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
 class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main), itemsClickListener {
@@ -22,9 +25,15 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
    // lateinit var itemsRV: RecyclerView
     lateinit var itemsRVAdapter: itemsAdapter
     lateinit var itemsList: ArrayList<items>
+    lateinit var newItemsList: ArrayList<items>
+
 
     var dialog: Dialog? = null
     var walletMoney: Int? = null
+
+    private val url = "http://127.0.0.1:5000"
+    private val POST = "POST"
+    private val GET = "GET"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,10 +67,10 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
         binding.recyclerView.adapter = itemsRVAdapter
 
         // on below line we are adding data to our list
-        itemsList.add(items("GRAPES", R.drawable.grapes, "Grapes contain powerful antioxidants known as polyphenols. These are thought to have anti-inflammatory and antioxidant properties. ",  "100", System.currentTimeMillis()))
-        itemsList.add(items("CARROT", R.drawable.carrot, "Carrots are rich in vitamins, minerals, and fiber. They are also a good source of antioxidants. Antioxidants are nutrients present in plant-based foods. " ,  "150", System.currentTimeMillis()))
-        itemsList.add(items("LAMP", R.drawable.lamp, "A van is a type of road vehicle used for transporting goods or people. Depending on the type of van, it can be bigger or smaller than a pickup truck and SUV, and bigger than a common car. There is some varying in the scope of the word across the different  ", "200", System.currentTimeMillis()))
-        itemsList.add(items("VAN", R.drawable.van, "An electric light, lamp, or colloquially called light bulb is an electrical device that produces light. It is the most common form of artificial lighting. Lamps usually have a base made of ceramic, metal, glass, or plastic, which secures the lamp in the socket of a light fixture. " ,  "1500", System.currentTimeMillis()))
+        itemsList.add(items("GRAPES", R.drawable.grapes, "Grapes contain powerful antioxidants known as polyphenols. These are thought to have anti-inflammatory and antioxidant properties. ",  "100", 3,System.currentTimeMillis()))
+        itemsList.add(items("CARROT", R.drawable.carrot, "Carrots are rich in vitamins, minerals, and fiber. They are also a good source of antioxidants. Antioxidants are nutrients present in plant-based foods. " ,  "150",10, System.currentTimeMillis()))
+        itemsList.add(items("LAMP", R.drawable.lamp, "A van is a type of road vehicle used for transporting goods or people. Depending on the type of van, it can be bigger or smaller than a pickup truck and SUV, and bigger than a common car. There is some varying in the scope of the word across the different  ", "200", 5,System.currentTimeMillis()))
+        itemsList.add(items("VAN", R.drawable.van, "An electric light, lamp, or colloquially called light bulb is an electrical device that produces light. It is the most common form of artificial lighting. Lamps usually have a base made of ceramic, metal, glass, or plastic, which secures the lamp in the socket of a light fixture. " , "1500", 6,System.currentTimeMillis()))
 
         itemsRVAdapter.notifyDataSetChanged()
 
@@ -255,7 +264,14 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
         val itemImage = dialog!!.findViewById<ImageView>(R.id.image)
         val txtDescription = dialog!!.findViewById<TextView>(R.id.txtDescription)
         val txtPrice = dialog!!.findViewById<TextView>(R.id.txtPrice)
-        
+
+        val btnAdd = dialog!!.findViewById<ImageView>(R.id.add)
+        val txtNumItems = dialog!!.findViewById<TextView>(R.id.itemNum)
+        val btnRemove = dialog!!.findViewById<ImageView>(R.id.remove)
+
+        val lnCounter = dialog!!.findViewById<LinearLayout>(R.id.lnCounter)
+
+        var num = 0
         txtName.text = data.name
         txtDescription.text = data.description 
         txtPrice.text = data.price
@@ -263,6 +279,24 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
 
         val PurchaseButton = dialog!!.findViewById<Button>(R.id.PurchaseButton)
         val CancelButton = dialog!!.findViewById<Button>(R.id.CancelButton)
+
+        btnAdd.setOnClickListener {
+            if (num > data.itemCount){
+                btnAdd.visibility = View.INVISIBLE
+            }else {
+                num += 1
+                txtNumItems.text = num.toString()
+
+            }
+
+        }
+
+        btnRemove.setOnClickListener {
+            if (num > 0 && num != 0){
+                num -= 1
+                txtNumItems.text = num.toString()
+            }
+        }
 
         PurchaseButton.setOnClickListener {
             
@@ -275,6 +309,7 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
                 binding.txtMoney.text = walletMoney.toString()
 
                 prefs.setWalletMoney(walletMoney!!.toInt())
+                data.itemCount = data.itemCount - num
 
                 try {
 
@@ -290,9 +325,14 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
 
                 }
 
+                if (data.itemCount == 0){
 
-                filteredlist.addAll(itemsList.filter { items -> items.name != data.name })
-                itemsRVAdapter.filterList(filteredlist)
+                    newItemsList.addAll(itemsList.filter { items -> items.name != data.name })
+                    itemsRVAdapter.filterList(newItemsList)
+
+                }
+
+                purchasedItemToServer(data)
 
                 dialog!!.dismiss()
                 Toast.makeText(this@MainActivity, "Successfully Purchased!", Toast.LENGTH_SHORT).show()
@@ -336,6 +376,46 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
             itemsRVAdapter.filterList(filteredlist)
 
         }
+
+
+    }
+
+    private fun purchasedItemToServer(data: items){
+        val fullURL = url + "/buy"
+
+        val client = OkHttpClient().newBuilder()
+            .connectTimeout(10, TimeUnit.SECONDS)
+            .readTimeout(10, TimeUnit.SECONDS)
+            .writeTimeout(10, TimeUnit.SECONDS).build()
+
+        val formBody: RequestBody = FormBody.Builder()
+            .add("name", data.name)
+            .build()
+
+        val request = Request.Builder()
+            .url(fullURL)
+            .post(formBody)
+            .build()
+
+        /* this is how the callback get handled */
+        client.newCall(request)
+            .enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    e.printStackTrace()
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    // Read data on the worker thread
+                    val responseData = response.body!!.string()
+
+                    // Run view-related code back on the main thread.
+                    // Here we display the response message in our text view
+                    this@MainActivity.runOnUiThread(Runnable {
+                        Toast.makeText(this@MainActivity, "Thank you for purchasing", Toast.LENGTH_SHORT).show()
+
+                    })
+                }
+            })
 
 
     }

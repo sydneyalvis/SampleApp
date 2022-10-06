@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="16dp">
@@ -56,6 +57,44 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/lnCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/grayweight"
+        android:layout_marginTop="20dp"
+        >
+
+        <ImageView
+            android:id="@+id/add"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_add"
+            app:tint="@color/green"
+            android:layout_margin="8dp"
+            />
+
+        <TextView
+            android:id="@+id/itemNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:layout_margin="8dp"
+            />
+
+        <ImageView
+            android:id="@+id/remove"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="8dp"
+            android:src="@drawable/ic_remove"
+            app:tint="@color/red"
+            />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/PurchaseButton"
