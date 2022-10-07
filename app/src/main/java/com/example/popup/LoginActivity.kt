@@ -1,17 +1,14 @@
 package com.example.popup
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.popup.databinding.ActivityLoginBinding
+import com.example.popup.model.Person
+import com.example.popup.utils.ApiInterface
 import com.skydoves.bindables.BindingActivity
-import okhttp3.*
-import java.io.IOException
-import java.util.concurrent.TimeUnit
 
 class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_login) {
-
 
     private val url = "http://127.0.0.1:5000"
     private val POST = "POST"
@@ -66,70 +63,54 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_lo
             Toast.makeText(this@LoginActivity, "Password incorrect", Toast.LENGTH_SHORT).show()
 
         }else {
+            postServer()
 
             prefs.setLogin()
-            sendServer(POST,"login")
+            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+            finish()
 
         }
 
     }
 
-    private fun sendServer(type: String, method: String){
+    private fun postServer() {
 
-        val fullURL = url + "/" + method
+        val name = binding.inputUsername.text.toString()
 
-        val client = OkHttpClient().newBuilder()
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(10, TimeUnit.SECONDS).build()
+        val p = Person(
+            binding.inputUsername.text.toString(),
+            "",
+            binding.inputPassword.text.toString())
 
-        /* If it is a post request, then we have to pass the parameters inside the request body*/
-        //val request =  if (type.equals(POST)) {
+        val apiInterface = ApiInterface.create().login(p)
 
-            val formBody: RequestBody = FormBody.Builder()
-                .add("username", binding.inputUsername.text.toString())
-               // .add("email", binding.inputEmail.text.toString())
-                .add("password", binding.inputPassword.text.toString())
-                .build()
+        apiInterface.enqueue( object : retrofit2.Callback<Person> {
+            override fun onResponse(call: retrofit2.Call<Person>?, response: retrofit2.Response<Person>?) {
 
-            val request = Request.Builder()
-                .url(fullURL)
-                .post(formBody)
-                .build()
-
-//        } else {
-//
-//            /*If it's our get request, it doen't require parameters, hence just sending with the url*/
-//            Request.Builder()
-//                .url(fullURL)
-//                .build()
-//
-//        }
-
-        /* this is how the callback get handled */
-        client.newCall(request)
-            .enqueue(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    e.printStackTrace()
-                }
-
-                override fun onResponse(call: Call, response: Response) {
-                    // Read data on the worker thread
-                    val responseData = response.body!!.string()
-
-                    // Run view-related code back on the main thread.
-                    // Here we display the response message in our text view
-                    this@LoginActivity.runOnUiThread(Runnable {
-                        Toast.makeText(this@LoginActivity, "Lgin successfully $responseData", Toast.LENGTH_SHORT).show()
+                if (response != null) {
+                    if (response.isSuccessful){
+                        Toast.makeText(this@LoginActivity, "Welcome $name", Toast.LENGTH_SHORT).show()
                         startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                         finish()
-                    })
-                }
-            })
 
+                    }else {
+                        Toast.makeText(this@LoginActivity, "Unsuccessful login", Toast.LENGTH_SHORT).show()
+
+
+                    }
+                }
+                //if(response?.body() != null)
+                //recyclerAdapter.setMovieListItems(response.body()!!)
+            }
+
+            override fun onFailure(call: retrofit2.Call<Person>?, t: Throwable?) {
+                if (t != null) {
+                    Toast.makeText(this@LoginActivity, "A problem ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        })
 
     }
-
-
 
 }

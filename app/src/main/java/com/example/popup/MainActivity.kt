@@ -11,11 +11,16 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.popup.adapter.itemsAdapter
 import com.example.popup.databinding.ActivityMainBinding
+import com.example.popup.model.Person
 import com.example.popup.model.items
+import com.example.popup.utils.ApiInterface
 import com.example.popup.utils.itemsClickListener
 import com.google.android.material.textfield.TextInputEditText
 import com.skydoves.bindables.BindingActivity
 import okhttp3.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
@@ -327,15 +332,13 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
 
                 if (data.itemCount == 0){
 
-                    newItemsList.addAll(itemsList.filter { items -> items.name != data.name })
-                    itemsRVAdapter.filterList(newItemsList)
-
+                    itemsList.addAll(itemsList.filter { items -> items.name != data.name })
+                    itemsRVAdapter.filterList(itemsList)
                 }
 
                 purchasedItemToServer(data)
 
                 dialog!!.dismiss()
-                Toast.makeText(this@MainActivity, "Successfully Purchased!", Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -381,41 +384,32 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
     }
 
     private fun purchasedItemToServer(data: items){
-        val fullURL = url + "/buy"
 
-        val client = OkHttpClient().newBuilder()
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(10, TimeUnit.SECONDS).build()
+        val apiInterface = ApiInterface.create().buy(data)
 
-        val formBody: RequestBody = FormBody.Builder()
-            .add("name", data.name)
-            .build()
+        apiInterface.enqueue( object : Callback<items> {
+            override fun onResponse(call: Call<items>?, response: Response<items>?) {
 
-        val request = Request.Builder()
-            .url(fullURL)
-            .post(formBody)
-            .build()
+                if (response != null) {
+                    if (response.isSuccessful){
+                        Toast.makeText(this@MainActivity, "Purchased", Toast.LENGTH_SHORT).show()
 
-        /* this is how the callback get handled */
-        client.newCall(request)
-            .enqueue(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    e.printStackTrace()
+                    }else {
+                        Toast.makeText(this@MainActivity, "Unsuccessful Purchase", Toast.LENGTH_SHORT).show()
+
+                    }
+                }
+                //if(response?.body() != null)
+                //recyclerAdapter.setMovieListItems(response.body()!!)
+            }
+
+            override fun onFailure(call: Call<items>?, t: Throwable?) {
+                if (t != null) {
+                    Toast.makeText(this@MainActivity, "A problem ${t.message}", Toast.LENGTH_SHORT).show()
                 }
 
-                override fun onResponse(call: Call, response: Response) {
-                    // Read data on the worker thread
-                    val responseData = response.body!!.string()
-
-                    // Run view-related code back on the main thread.
-                    // Here we display the response message in our text view
-                    this@MainActivity.runOnUiThread(Runnable {
-                        Toast.makeText(this@MainActivity, "Thank you for purchasing", Toast.LENGTH_SHORT).show()
-
-                    })
-                }
-            })
+            }
+        })
 
 
     }

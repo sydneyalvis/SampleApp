@@ -4,11 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import com.example.popup.databinding.ActivityRegBinding
+import com.example.popup.model.Person
+import com.example.popup.utils.ApiInterface
 import com.skydoves.bindables.BindingActivity
-import okhttp3.*
-import java.io.IOException
-import java.util.concurrent.TimeUnit
-
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class RegActivity : BindingActivity<ActivityRegBinding>(R.layout.activity_reg){
 
@@ -20,31 +21,29 @@ class RegActivity : BindingActivity<ActivityRegBinding>(R.layout.activity_reg){
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_reg)
 
+
         binding.textViewSignUp.setOnClickListener {
 
             startActivity(Intent(this, LoginActivity::class.java))
-
 
         }
 
         binding.btnRegister.setOnClickListener {
 
-           // val name = binding.inputUsername.text.toString()
-           // Toast.makeText(this@RegActivity, "$name", Toast.LENGTH_SHORT).show()
-
             if (binding.inputUsername.text.isNullOrEmpty() ){
 
                 Toast.makeText(this@RegActivity, "Input username", Toast.LENGTH_SHORT).show()
-
 
             }else if(binding.inputEmail.text.isNullOrEmpty()){
 
                 Toast.makeText(this@RegActivity, "Input email", Toast.LENGTH_SHORT).show()
 
-
             }else {
+                prefs.setUserName(binding.inputUsername.text.toString())
+                prefs.setEmail(binding.inputEmail.text.toString())
+                prefs.setPassword(binding.inputPassword.text.toString())
 
-                register()
+                postServer()
             }
 
 
@@ -52,72 +51,44 @@ class RegActivity : BindingActivity<ActivityRegBinding>(R.layout.activity_reg){
 
     }
 
-    private fun register(){
+    private fun postServer() {
 
         val name = binding.inputUsername.text.toString()
-        prefs.setUserName(binding.inputUsername.text.toString())
-        prefs.setEmail(binding.inputEmail.text.toString())
-        prefs.setPassword(binding.inputPassword.text.toString())
 
+        val p = Person(
+            binding.inputUsername.text.toString(),
+            binding.inputEmail.text.toString(),
+            binding.inputPassword.text.toString())
 
-        sendServer(POST,"register")
+        val apiInterface = ApiInterface.create().register(p)
 
-    }
+        apiInterface.enqueue( object : Callback<Person> {
+            override fun onResponse(call: Call<Person>?, response: Response<Person>?) {
 
-    private fun sendServer(type: String, method: String){
-
-        val fullURL = url + "/" + method
-
-        val client = OkHttpClient().newBuilder()
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(10, TimeUnit.SECONDS).build()
-
-        /* If it is a post request, then we have to pass the parameters inside the request body*/
-      //  val request =  if (type.equals(POST)) {
-
-            val formBody: RequestBody = FormBody.Builder()
-                    .add("username", binding.inputUsername.text.toString())
-                    .add("email", binding.inputEmail.text.toString())
-                    .add("password", binding.inputPassword.text.toString())
-                    .build()
-
-           val request = Request.Builder()
-                .url(fullURL)
-                .post(formBody)
-                .build()
-
-//            } else {
-//
-//                /*If it's our get request, it doen't require parameters, hence just sending with the url*/
-//                Request.Builder()
-//                    .url(fullURL)
-//                    .build()
-//
-//            }
-
-        /* this is how the callback get handled */
-        client.newCall(request)
-            .enqueue(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    e.printStackTrace()
-                }
-
-                override fun onResponse(call: Call, response: Response) {
-                    // Read data on the worker thread
-                    val responseData = response.body!!.string()
-
-                    // Run view-related code back on the main thread.
-                    // Here we display the response message in our text view
-                    this@RegActivity.runOnUiThread(Runnable {
-                        Toast.makeText(this@RegActivity, "Registered successfully $responseData", Toast.LENGTH_SHORT).show()
+                if (response != null) {
+                    if (response.isSuccessful){
+                        Toast.makeText(this@RegActivity, "Welcome $name", Toast.LENGTH_SHORT).show()
                         startActivity(Intent(this@RegActivity, LoginActivity::class.java))
 
-                    })
-                }
-            })
+                    }else {
+                        Toast.makeText(this@RegActivity, "Registration unsuccessful", Toast.LENGTH_SHORT).show()
 
+
+                    }
+                }
+                //if(response?.body() != null)
+                    //recyclerAdapter.setMovieListItems(response.body()!!)
+            }
+
+            override fun onFailure(call: Call<Person>?, t: Throwable?) {
+                if (t != null) {
+                    Toast.makeText(this@RegActivity, "A problem ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        })
 
     }
 
 }
+
