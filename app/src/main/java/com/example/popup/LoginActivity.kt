@@ -63,7 +63,8 @@ class LoginActivity : BindingActivity<ActivityLoginBinding>(R.layout.activity_lo
             Toast.makeText(this@LoginActivity, "Password incorrect", Toast.LENGTH_SHORT).show()
 
         }else {
-            postServer()
+            //UNCOMMENT TO SEND CREDENTIALS TO SERVER
+           // postServer()
 
             prefs.setLogin()
             startActivity(Intent(this@LoginActivity, MainActivity::class.java))

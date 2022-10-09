@@ -30,6 +30,8 @@ class RegActivity : BindingActivity<ActivityRegBinding>(R.layout.activity_reg){
 
         binding.btnRegister.setOnClickListener {
 
+            val name = binding.inputUsername.text.toString()
+
             if (binding.inputUsername.text.isNullOrEmpty() ){
 
                 Toast.makeText(this@RegActivity, "Input username", Toast.LENGTH_SHORT).show()
@@ -43,7 +45,11 @@ class RegActivity : BindingActivity<ActivityRegBinding>(R.layout.activity_reg){
                 prefs.setEmail(binding.inputEmail.text.toString())
                 prefs.setPassword(binding.inputPassword.text.toString())
 
-                postServer()
+                //UNCOMMENT TO SEND CREDENTIALS TO SERVER
+                //postServer()
+
+                Toast.makeText(this@RegActivity, "Welcome $name", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this@RegActivity, LoginActivity::class.java))
             }
 
 

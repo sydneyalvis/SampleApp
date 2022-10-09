@@ -336,7 +336,8 @@ class MainActivity : BindingActivity<ActivityMainBinding>(R.layout.activity_main
                     itemsRVAdapter.filterList(itemsList)
                 }
 
-                purchasedItemToServer(data)
+                //UNCOMMENT TO SEND PURCHASED ITEM TO SERVER
+               // purchasedItemToServer(data)
 
                 dialog!!.dismiss()
             }
